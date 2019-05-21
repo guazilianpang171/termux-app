@@ -237,6 +237,17 @@ public final class TermuxService extends Service implements SessionChangedCallba
 
     @Override
     public void onDestroy() {
+        File termuxTmpDir = new File(TermuxService.PREFIX_PATH + "/tmp");
+        if (termuxTmpDir.exists()) {
+            try {
+                TermuxInstaller.deleteFolder(termuxTmpDir);
+            } catch (Exception e) {
+                Log.e(EmulatorDebug.LOG_TAG, "Error while removing directory " + termuxTmpDir.getAbsolutePath(), e);
+            }
+
+            termuxTmpDir.mkdirs();
+        }
+
         if (mWakeLock != null) mWakeLock.release();
         if (mWifiLock != null) mWifiLock.release();
 
